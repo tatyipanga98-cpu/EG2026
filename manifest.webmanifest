@@ -1,0 +1,20 @@
+{
+  "name": "EG2026 – États généraux",
+  "short_name": "EG2026",
+  "description": "Espace de travail des États généraux, Kinshasa Ouest",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1B30",
+  "theme_color": "#0B1B30",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
