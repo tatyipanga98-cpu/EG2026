@@ -1016,7 +1016,8 @@ document.body.addEventListener("click",async e=>{
   const {error}=await db.from("resultats").update({constat:v.trim()||null}).eq("code",x.code);if(error){toast("Modification refusée");return}x.constat=v.trim()||null;renderResu();toast("Constat enregistré")}
 });
 
-setTimeout(()=>{const l=document.getElementById("launch");if(l)l.classList.add("hide");if($("#v-login").hidden&&$("#app").hidden)login()},1800);\ninit();
+setTimeout(()=>{const l=document.getElementById("launch");if(l)l.classList.add("hide");if($("#v-login").hidden&&$("#app").hidden)login()},1800);
+init();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
