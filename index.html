@@ -193,7 +193,11 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
 </style>
 </head>
 <body>
-<div id="launch" aria-label="EG2026"><div class="launch-inner"><img src="/file_00000000a3f0820eb4fcf4cb85c16cbe.png" alt="Logo EG2026"><h1>EG2026</h1><p>États généraux · RDC Ouest</p><div class="line"></div></div></div>\n<div id="off" hidden role="status">Hors ligne : vos saisies sont conservées sur cet appareil et seront envoyées au retour du réseau.</div>
+<div id="launch" aria-label="EG2026"><div class="launch-inner"><img src="/file_00000000a3f0820eb4fcf4cb85c16cbe.png" alt="Logo EG2026"><h1>EG2026</h1><p>États généraux · RDC Ouest</p><div class="line"></div></div></div>\n<script>
+/* Secours autonome : l'écran de lancement ne dépend pas du script principal. */
+(function(){setTimeout(function(){var splash=document.getElementById('launch'),login=document.getElementById('v-login'),app=document.getElementById('app');if(splash)splash.classList.add('hide');if(login&&app&&login.hidden&&app.hidden){login.hidden=false;var err=document.getElementById('le');if(err&&!err.textContent)err.textContent='Le démarrage a rencontré un problème. Rechargez la page ou réessayez.'}},7000)})();
+</script>
+<div id="off" hidden role="status">Hors ligne : vos saisies sont conservées sur cet appareil et seront envoyées au retour du réseau.</div>
 
 <!-- CONNEXION -->
 <div id="v-login" class="acc" hidden>
