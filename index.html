@@ -66,6 +66,8 @@ section.v{animation:fade .45s cubic-bezier(.2,.7,.2,1) both}
 .s0{color:var(--mut);border-color:var(--line2)}.s1{color:var(--or);border-color:color-mix(in srgb,var(--or) 60%,transparent)}.s2{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 60%,transparent)}.s3{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 60%,transparent)}
 .pill{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:99px;font:600 11.5px Inter;background:var(--bg2);color:var(--mut);border:1px solid var(--line);white-space:nowrap}
 .pill.or{color:var(--or);border-color:color-mix(in srgb,var(--or) 40%,transparent)}
+.sel{min-height:44px;min-width:150px;background:var(--bg);color:var(--fg);border:1px solid var(--line2);border-radius:12px;padding:0 12px;font-size:16px}
+.sel:disabled{opacity:.55}
 .err{color:var(--warn);font-size:14px;min-height:20px}
 /* rows */
 .list{display:grid}
@@ -407,6 +409,7 @@ const SL={a_confirmer:"À confirmer",confirme:"Confirmé",realise:"Réalisé",a_
 const SC={a_confirmer:"s3",confirme:"s1",realise:"s2",a_faire:"s0",en_cours:"s1",fait:"s2",remise:"s2",livre:"s2",propose:"s0",consolide:"s1",adopte:"s2",a_traiter:"s3",repondu:"s2",sans_reponse:"s0"};
 const CYC={prog:["a_confirmer","confirme","realise"],taches:["a_faire","en_cours","fait"],livrables:["a_faire","en_cours","livre"],restitutions:["a_faire","en_cours","remise"],recommandations:["propose","consolide","adopte"],questions:["a_traiter","repondu","sans_reponse"]};
 const TBL={delegues:"delegues",programme:"programme",taches:"taches",documents:"documents",livrables:"livrables",reco:"recommandations",ques:"questions",compte:"profiles",depense:"budget_depenses",ligne:"budget_lignes"};
+const AXL={A:"Coordination de la CCN",B:"Visibilité des champs",C:"Règles de publication",D:"Circuit de transmission",E:"Cadre commun visuel",F:"Retour statistique"};
 const AB={1:"KC1",2:"KC2",3:"KM",4:"KA",5:"KN",6:"KS",7:"KSE",8:"KSO",9:"KO",10:"KE",11:"CAI",12:"CTM",13:"CTJ",14:"CTED",15:"CTE",16:"AV"};
 const CHK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const PEN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>';
@@ -423,9 +426,9 @@ const WA='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 function csv(name,rows){const t="\ufeff"+rows.map(x=>x.map(c=>`"${String(c??"").replace(/"/g,'""')}"`).join(";")).join("\n");
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/csv;charset=utf-8"}));a.download=name+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 function pdf(title,body){const w=window.open("","_blank");if(!w){toast("Autorisez les fenêtres pour exporter le PDF");return}
- w.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{margin:16mm}body{font:13px/1.55 Georgia,serif;color:#111;margin:0;padding:24px}h1{font:600 22px Georgia,serif;margin:0 0 4px}h2{font:600 16px Georgia,serif;margin:22px 0 8px;border-bottom:1px solid #bbb;padding-bottom:4px}h3{font:600 14px Georgia,serif;margin:14px 0 4px}table{width:100%;border-collapse:collapse;font:12px Arial,sans-serif}td,th{border-bottom:1px solid #ddd;padding:6px;text-align:left;vertical-align:top}th{background:#f3efe4}.sm{font:12px Arial,sans-serif;color:#555}.hd{border-bottom:2px solid #122d9b;padding-bottom:12px;margin-bottom:18px}.brandhead{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:10px}.brandidentity{display:flex;align-items:center;gap:10px;min-width:0}.emblem{width:54px;height:54px;object-fit:contain}.brandword strong{display:block;font:700 27px/1 Arial,sans-serif;letter-spacing:-1px;color:#102b9b}.brandword strong span{color:#ed171f}.brandword small{display:block;margin-top:5px;font:700 8px/1.2 Arial,sans-serif;letter-spacing:1.1px;color:#34476f}.motto{display:block;width:154px;max-height:82px;object-fit:contain}.org{font:700 8px/1.4 Arial,sans-serif;letter-spacing:.8px;color:#263a70;margin-bottom:7px}@media print{.brandhead,.brandidentity,.motto,.emblem{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>${body}</body></html>`);
- w.document.close();w.focus();setTimeout(()=>w.print(),900)}
-const head=(t,sub)=>`<div class="hd"><div class="brandhead"><div class="brandidentity"><img class="emblem" src="https://raw.githubusercontent.com/tatyipanga98-cpu/EG2026/main/file_00000000a3f0820eb4fcf4cb85c16cbe.png" alt="Emblème de l’Église néo-apostolique"><div class="brandword"><strong>EG<span>2026</span></strong><small>ÉTATS GÉNÉRAUX · RDC OUEST</small></div></div><img class="motto" src="https://raw.githubusercontent.com/tatyipanga98-cpu/EG2026/main/logo.png" alt="Ne crains rien, crois seulement – 2026"></div><div class="org">ÉGLISE NÉO-APOSTOLIQUE DE LA R.D CONGO OUEST · CCN – RDC OUEST</div><h1>${esc(t)}</h1><div class="sm">${esc(sub||"États généraux de la communication numérique · 28 et 29 novembre 2026 · Limete")}</div></div>`;
+ w.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{margin:16mm}body{font:13px/1.55 Georgia,serif;color:#111;margin:0;padding:24px}h1{font:600 22px Georgia,serif;margin:0 0 4px}h2{font:600 16px Georgia,serif;margin:22px 0 8px;border-bottom:1px solid #bbb;padding-bottom:4px}h3{font:600 14px Georgia,serif;margin:14px 0 4px}table{width:100%;border-collapse:collapse;font:12px Arial,sans-serif}td,th{border-bottom:1px solid #ddd;padding:6px;text-align:left;vertical-align:top}th{background:#f3efe4}.sm{font:12px Arial,sans-serif;color:#555}.hd{border-bottom:2px solid #9a6e1c;padding-bottom:10px;margin-bottom:18px}</style></head><body>${body}</body></html>`);
+ w.document.close();w.focus();setTimeout(()=>w.print(),350)}
+const head=(t,sub)=>`<div class="hd"><div class="sm">ÉGLISE NÉO-APOSTOLIQUE DE LA R.D CONGO OUEST · CCN – RDC OUEST</div><h1>${esc(t)}</h1><div class="sm">${esc(sub||"États généraux de la communication numérique · 28 et 29 novembre 2026 · Limete")}</div></div>`;
 const waNum=t=>{let n=String(t||"").replace(/[^\d]/g,"");if(n.startsWith("00"))n=n.slice(2);if(n.startsWith("0"))n="243"+n.slice(1);return n};
 const waLink=(tel,msg)=>{const n=waNum(tel);return n?`https://wa.me/${n}?text=${encodeURIComponent(msg)}`:"#"};
 const RAPPEL="États généraux de la communication numérique. Samedi 28 novembre, de 09h00 à 16h00 ; dimanche 29 novembre, de 13h00 à 16h00. Salle de conférence de l’administration, N°11, 18ème Rue Poids Lourd, Limete. Merci de confirmer votre présence. — Secrétariat technique, CCN – RDC Ouest";
@@ -444,7 +447,7 @@ function pdfProgramme(){
 function exportReco(){csv("eg2026-recommandations",[["Axe","Référence","Statut","Proposition","Réserve"],...S.rec.map(r=>[r.axe,r.ref||"",SL[r.statut],r.texte,r.reserve||""])])}
 function projetResolutions(){
  const ad=S.rec.filter(r=>r.statut==="adopte"),co=S.rec.filter(r=>r.statut==="consolide");
- const par=L=>"ABCDEF".split("").map(x=>{const I=L.filter(r=>r.axe===x);return I.length?`<h3>Axe ${x}</h3>`+I.map((r,i)=>`<p><b>Résolution ${x}${i+1}.</b> ${esc(r.texte)}${r.reserve?`<br><i>Réserve : ${esc(r.reserve)}</i>`:""}</p>`).join(""):""}).join("");
+ const par=L=>"ABCDEF".split("").map(x=>{const I=L.filter(r=>r.axe===x);return I.length?`<h3>Axe ${x} · ${AXL[x]}</h3>`+I.map((r,i)=>`<p><b>Résolution ${x}${i+1}.</b> ${esc(r.texte)}${r.reserve?`<br><i>Réserve : ${esc(r.reserve)}</i>`:""}</p>`).join(""):""}).join("");
  pdf("Projet de résolutions",head("Projet de résolutions","À soumettre à l’Apôtre de district pour appréciation et décision")+`<h2>Résolutions retenues</h2>${par(ad)||"<p>Aucune résolution retenue à ce stade.</p>"}${co.length?`<h2>Retenues avec réserve</h2>${par(co)}`:""}<p class="sm" style="margin-top:24px">Les recommandations sont soumises à l’Apôtre de district, qui en apprécie la suite et décide.</p>`);
 }
 function compteRenduSamedi(){
@@ -515,7 +518,7 @@ async function boot(u){
  $("#tiles").innerHTML=["direct","acc","reco","ques","champs","tach","docs","livr","rapp"].concat(can("bud")?["bud"]:[],can("adm")?["comptes"]:[],can("jr")?["journal"]:[]).map(k=>`<button class="card" data-go="${k}" style="text-align:left;cursor:pointer;display:grid;gap:10px"><span class="eyebrow">${TITLES[k]}</span><span class="sm mut">${({bud:"Prévu, dépenses et reste",direct:"Séquence en cours, chrono et signal",acc:"Scanner les badges, rechercher un délégué",reco:"Propositions, consolidation et adoption",ques:"Questions de la salle",champs:"Fiches et connexion des champs",tach:"Calendrier et points ouverts",docs:"Liens de partage",livr:"Productions attendues",rapp:"Synthèse imprimable",comptes:"Rôles et accès",journal:"Traçabilité"})[k]}</span></button>`).join("");
  $$("#tiles [data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
  $$(".side [data-admin]").forEach(b=>b.hidden=!can("adm"));$$(".side [data-bud]").forEach(b=>b.hidden=!can("bud"));$$(".side [data-audit]").forEach(b=>b.hidden=!can("jr"));
- await load();$("#rl").textContent=`${ROLES[p.role]||p.role} · ${S.del.length} délégués enregistrés`;await flush();go("home");live();
+ await load();await flush();go("home");live();
 }
 $("#fl").onsubmit=async e=>{e.preventDefault();$("#le").textContent="";const email=$("#em").value.trim(),pw=$("#pw").value;
  if(!email||!pw){$("#le").textContent="Saisissez votre e-mail et votre mot de passe.";return}
@@ -539,7 +542,7 @@ async function load(){
   db.from("documents").select("*").order("created_at",{ascending:false}),
   db.from("livrables").select("*").order("created_at",{ascending:false})
  ]);
- if(st.error){console.error("EG2026 structures:",st.error);toast("Impossible de charger les structures : "+(st.error.message||"erreur Supabase"));}else{S.str=st.data||[]}if(de.error){console.error("EG2026 delegues:",de.error);toast("La liste des délégués n’a pas pu être chargée : "+(de.error.message||"erreur Supabase"));}else{S.del=de.data||[]}S.pres={};(pr.data||[]).forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
+ S.str=st.data||S.str;S.del=de.data||S.del;S.pres={};(pr.data||[]).forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
  getQ().forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
  S.rec=re.data||[];S.res={};(rs.data||[]).forEach(x=>S.res[x.atelier_id]=x);
  S.ques=qu.data||[];S.suivi={};(su.data||[]).forEach(x=>S.suivi[x.structure_id]=x);
@@ -661,12 +664,12 @@ $("#ate").addEventListener("input",e=>{const t=e.target.closest("[data-rest]");i
 /* ========== recommandations ========== */
 function renderReco(){
  const t=S.rec.length;
- $("#rs").textContent=t?`${t} proposition(s) : ${S.rec.filter(r=>r.source==="memo").length} du mémo initial, ${S.rec.filter(r=>r.source!=="memo").length} issue(s) des travaux.`:"Formulez vos propositions à partir des ateliers.";
- $("#fx").innerHTML=["Tous",..."ABCDEF"].map(a=>`<button class="chip" data-fx="${a}" aria-pressed="${S.fx===a}">${a==="Tous"?"Tous les axes":"Axe "+a}</button>`).join("");
+ $("#rs").textContent=t?`${t} proposition(s) : ${S.rec.filter(r=>r.source==="memo").length} du mémo initial, ${S.rec.filter(r=>r.source==="expert").length} des experts, ${S.rec.filter(r=>r.source!=="memo"&&r.source!=="expert").length} issue(s) des travaux.`:"Formulez vos propositions à partir des ateliers.";
+ $("#fx").innerHTML=["Tous",..."ABCDEF"].map(a=>`<button class="chip" data-fx="${a}" aria-pressed="${S.fx===a}">${a==="Tous"?"Tous les axes":a+" · "+AXL[a]}</button>`).join("");
  const L=S.rec.filter(r=>S.fx==="Tous"||r.axe===S.fx);
  const cs=can("reco_st");
  $("#cols").innerHTML=[["propose","Proposées"],["consolide","Avec réserve"],["adopte","Retenues"]].map(([k,ti])=>{const it=L.filter(r=>r.statut===k);
-  return`<div class="card col"><h3>${ti}<span class="cnt">${it.length}</span></h3>${it.length?it.map(r=>`<div class="reco"><p>${esc(r.texte)}</p>${r.reserve?`<p class="sm" style="color:var(--or2);margin-top:-4px">Réserve : ${esc(r.reserve)}</p>`:""}<div class="ft"><span class="axe">Axe ${esc(r.axe)}${r.ref?` · <span class="mut">${esc(r.ref)}</span>`:""}</span><div style="display:flex;gap:8px;flex-wrap:wrap">${cs&&r.statut!=="adopte"?`<button class="btn s" data-adopt="${r.id}:adopte">Retenir</button>`:""}${cs&&r.statut==="propose"?`<button class="btn g s" data-adopt="${r.id}:consolide">Avec réserve</button>`:""}${cs&&r.statut!=="propose"?`<button class="btn g s" data-adopt="${r.id}:propose">Reprendre</button>`:""}</div></div></div>`).join(""):`<p class="sm mut">Aucune proposition à ce stade.</p>`}</div>`}).join("");
+  return`<div class="card col"><h3>${ti}<span class="cnt">${it.length}</span></h3>${it.length?it.map(r=>`<div class="reco"><p>${esc(r.texte)}</p>${r.reserve?`<p class="sm" style="color:var(--or2);margin-top:-4px">Réserve : ${esc(r.reserve)}</p>`:""}<div class="ft"><span class="axe">Axe ${esc(r.axe)} · ${esc(AXL[r.axe]||"")}${r.ref?` · <span class="mut">${esc(r.ref)}</span>`:""}</span><div style="display:flex;gap:8px;flex-wrap:wrap">${cs&&r.statut!=="adopte"?`<button class="btn s" data-adopt="${r.id}:adopte">Retenir</button>`:""}${cs&&r.statut==="propose"?`<button class="btn g s" data-adopt="${r.id}:consolide">Avec réserve</button>`:""}${cs&&r.statut!=="propose"?`<button class="btn g s" data-adopt="${r.id}:propose">Reprendre</button>`:""}</div></div></div>`).join(""):`<p class="sm mut">Aucune proposition à ce stade.</p>`}</div>`}).join("");
 }
 $("#cols").addEventListener("click",async e=>{const b=e.target.closest("[data-adopt]");if(!b)return;const[id,st]=b.dataset.adopt.split(":");const r=S.rec.find(x=>x.id===id);if(!r)return;
  let reserve=null;if(st==="consolide"){const v=prompt("Réserve à noter sur cette proposition (facultatif)",r.reserve||"");if(v===null)return;reserve=v.trim()||null}
@@ -737,27 +740,15 @@ function renderRapport(){
 
 /* ========== comptes & journal ========== */
 function renderComptes(){
+ if(typing("#cl"))return;
  $("#cl").innerHTML=S.profs.map(p=>{const me=p.id===S.user.id;return`<div class="row"><div class="av">${esc((p.nom||"?")[0])}</div><div class="b"><div class="n">${esc(p.nom)}${me?" (vous)":""}</div></div>
-  <select class="f" style="min-height:40px;width:auto;padding:0 12px;border-radius:12px" data-role="${p.id}" aria-label="Rôle de ${esc(p.nom)}" ${me?"disabled":""}>${Object.keys(ROLES).map(r=>`<option value="${r}" ${r===p.role?"selected":""}>${ROLES[r]}</option>`).join("")}</select>
+  <select class="sel" data-role="${p.id}" aria-label="Rôle de ${esc(p.nom)}" ${me?"disabled":""}>${Object.keys(ROLES).map(r=>`<option value="${r}" ${r===p.role?"selected":""}>${ROLES[r]}</option>`).join("")}</select>
   <button class="st ${p.actif?"s2":"s0"}" data-active="${p.id}" ${me?"disabled":""}>${p.actif?"Actif":"Désactivé"}</button></div>`}).join("")||`<div class="empty"><h3>Aucun compte</h3></div>`;
 }
-$("#cl").addEventListener("change",async e=>{
- const s=e.target.closest("[data-role]");if(!s)return;
- const ancien=S.profs.find(p=>p.id===s.dataset.role)?.role;
- const nouveau=s.value;s.disabled=true;
- try{
-  const {data,error}=await db.from("profiles").update({role:nouveau}).eq("id",s.dataset.role).select("id,role").maybeSingle();
-  if(error)throw error;
-  if(!data){s.value=ancien||"";toast("Rôle non modifié : compte introuvable ou droits insuffisants.");return}
-  const p=S.profs.find(x=>x.id===data.id);if(p)p.role=data.role;
-  toast("Rôle mis à jour : "+(ROLES[data.role]||data.role));
-  await load();renderComptes();
- }catch(err){
-  s.value=ancien||"";console.error("EG2026 changement de rôle:",err);
-  toast("Échec du changement de rôle : "+(err.message||"erreur Supabase"));
- }finally{s.disabled=false}
-});
-$("#cl").addEventListener("click",async e=>{const b=e.target.closest("[data-active]");if(!b)return;const p=S.profs.find(x=>x.id===b.dataset.active);const {error}=await db.from("profiles").update({actif:!p.actif}).eq("id",p.id);toast(error?"Modification refusée":"Accès mis à jour");await load();renderComptes()});
+$("#cl").addEventListener("change",async e=>{const s=e.target.closest("[data-role]");if(!s)return;const p=S.profs.find(x=>x.id===s.dataset.role);const nv=s.value;s.blur();s.disabled=true;
+ const {error}=await db.from("profiles").update({role:nv}).eq("id",s.dataset.role);
+ toast(error?"Modification refusée : le rôle n’a pas changé":`${p?p.nom:"Compte"} : ${ROLES[nv]}`);await load();renderComptes()});
+$("#cl").addEventListener("click",async e=>{const b=e.target.closest("[data-active]");if(!b)return;b.blur();const p=S.profs.find(x=>x.id===b.dataset.active);const {error}=await db.from("profiles").update({actif:!p.actif}).eq("id",p.id);toast(error?"Modification refusée":"Accès mis à jour");await load();renderComptes()});
 const OP={INSERT:"Ajout",UPDATE:"Modification",DELETE:"Suppression"},TB={delegues:"délégué",recommandations:"recommandation",taches:"tâche",programme:"séance",documents:"document",livrables:"livrable",profiles:"compte",restitutions:"restitution",questions:"question",suivi_structures:"suivi de champ",budget_lignes:"ligne de budget",budget_depenses:"dépense",resultats:"résultat attendu"};
 function renderJournal(){const N={};S.profs.forEach(p=>N[p.id]=p.nom);
  $("#jl").innerHTML=S.audit.length?S.audit.map(a=>`<div class="row"><div class="b"><div class="n">${OP[a.op]||a.op} · ${TB[a.table_name]||a.table_name}</div><div class="meta">${esc(a.detail||"")}</div></div><div class="meta" style="text-align:right">${esc(N[a.user_id]||"Système")}<br>${new Date(a.at).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</div></div>`).join(""):`<div class="empty"><h3>Aucune activité enregistrée</h3></div>`}
@@ -770,7 +761,7 @@ const F={
  taches:{t:"Tâche",f:[["titre","Tâche","text",1],["responsable","Responsable","text"],["echeance","Échéance","date"],["statut","Statut","select",[["a_faire","À faire"],["en_cours","En cours"],["fait","Fait"]]],["description","Détails","textarea"]]},
  documents:{t:"Document",f:[["titre","Titre","text",1],["categorie","Catégorie","select",["Institutionnel","Atelier","Restitution","Rapport","Autre"]],["lien","Lien (https://…)","url"],["notes","Notes","textarea"]]},
  livrables:{t:"Livrable",f:[["titre","Livrable","text",1],["statut","Statut","select",[["a_faire","À faire"],["en_cours","En cours"],["livre","Livré"]]],["echeance","Échéance","date"],["lien","Lien (https://…)","url"],["notes","Notes","textarea"]]},
- reco:{t:"Recommandation",f:[["axe","Axe de consolidation","select",["A","B","C","D","E","F"]],["texte","Formulation","textarea",1]]},
+ reco:{t:"Recommandation",f:[["axe","Axe de consolidation","select",Object.keys(AXL).map(k=>[k,k+" · "+AXL[k]])],["texte","Formulation","textarea",1]]},
  ques:{t:"Question",f:[["texte","Question","textarea",1],["canal","Canal","select",[["salle","En salle"],["ecrit","Écrite"],["ligne","En ligne"]]],["theme","Thème","text"],["auteur_nom","Posée par (facultatif)","text"]]},
  depense:{t:"Dépense",f:[["ligne_id","Ligne de budget","ligne",1],["date","Date","date",1],["montant","Montant (dans la devise de la ligne)","number",1],["beneficiaire","Bénéficiaire","text"],["note","Note","textarea"],["justificatif","Justificatif (lien, facultatif)","url"]]},
  ligne:{t:"Ligne de budget",f:[["section","Rubrique","select",[["traiteur","Traiteur"],["location","Location de matériel"],["communication","Budget communication"],["imprevu","Imprévu"]]],["libelle","Désignation","textarea",1],["quantite","Quantité","number"],["prix_unitaire","Prix unitaire","number"],["jours","Nombre de jours","number"],["montant_prevu","Montant prévu","number",1],["devise","Devise","select",[["USD","Dollars ($)"],["CDF","Francs congolais (FC)"]]],["notes","Notes","textarea"]]},
@@ -797,7 +788,7 @@ $("#dgok").onclick=async()=>{
   if(ty==="structure")v=+v;else if(ty==="number")v=v===""?null:+v;else if(v==="")v=null;p[key]=v}
  if(k==="compte"){if(p.password.length<8){toast("Mot de passe : 8 caractères minimum");return}
   const {data,error}=await db.functions.invoke("admin-create-user",{body:p});
-  if(error||data?.error){console.error("EG2026 création compte:",error||data?.error);toast(data?.error||error?.message||"Création impossible");return}
+  if(error||data?.error){toast(data?.error||"Création impossible");return}
   $("#dg").close();await load();draw();toast("Compte créé");return}
  if(k==="reco"&&!row){p.source="atelier";p.statut="propose"}
  if(k==="programme"&&!row){const {data}=await db.from("programme").select("ordre").order("ordre",{ascending:false}).limit(1);p.ordre=(data?.[0]?.ordre||0)+1}
@@ -985,7 +976,7 @@ function rapportFinal(){
  const pg=["samedi","dimanche"].map(j=>`<h3>${j==="samedi"?"Samedi 28 novembre":"Dimanche 29 novembre"}</h3><table><tr><th>Horaire</th><th>Séquence</th><th>Intervenant</th></tr>${S.prog.filter(p=>p.jour===j).map(p=>`<tr><td>${hm(p.debut)}${p.fin?" – "+hm(p.fin):""}</td><td>${esc(p.titre)}</td><td>${esc(p.intervenant||"")}</td></tr>`).join("")}</table>`).join("");
  const at=S.ate.map(a=>{const r=S.res[a.id]||{};return`<h3>Atelier ${a.id} · ${esc(a.titre)}</h3><p class="sm">Facilitateur(s) : ${esc(a.facilitateurs||"—")} · Rapporteur : ${esc(r.rapporteur||"—")} · Participants : ${r.participants_nb??"—"}${r.provenance?" ("+esc(r.provenance)+")":""}</p>${[1,2,3,4,5,6].map(i=>(r["q"+i]||"").trim()?`<p><b>${i}. ${esc(QS[i-1])}</b><br>${esc(r["q"+i]).replace(/\n/g,"<br>")}</p>`:"").join("")||"<p class='sm'>Fiche non rédigée.</p>"}${(r.points_pleniere||"").trim()?`<p><b>Points portés à la plénière</b><br>${esc(r.points_pleniere).replace(/\n/g,"<br>")}</p>`:""}`}).join("");
  const qa=S.ques.length?`<table><tr><th>Question</th><th>Canal</th><th>Réponse</th></tr>${S.ques.map(q=>`<tr><td>${esc(q.texte)}</td><td>${({salle:"En salle",ecrit:"Écrite",ligne:"En ligne"})[q.canal]||""}</td><td>${esc(q.reponse||SL[q.statut])}</td></tr>`).join("")}</table>`:"<p>Aucune question enregistrée.</p>";
- const rc=["ABCDEF".split("").map(x=>{const L=S.rec.filter(r=>r.axe===x);return L.length?`<h3>Axe ${x}</h3>`+L.map(r=>`<p>• ${esc(r.texte)} <b>(${r.statut==="adopte"?"retenue":r.statut==="consolide"?"retenue avec réserve":"à examiner"})</b>${r.reserve?`<br><i>Réserve : ${esc(r.reserve)}</i>`:""}</p>`).join(""):""}).join("")||"<p>Aucune recommandation enregistrée.</p>"][0];
+ const rc=["ABCDEF".split("").map(x=>{const L=S.rec.filter(r=>r.axe===x);return L.length?`<h3>Axe ${x} · ${AXL[x]}</h3>`+L.map(r=>`<p>• ${esc(r.texte)} <b>(${r.statut==="adopte"?"retenue":r.statut==="consolide"?"retenue avec réserve":"à examiner"})</b>${r.reserve?`<br><i>Réserve : ${esc(r.reserve)}</i>`:""}</p>`).join(""):""}).join("")||"<p>Aucune recommandation enregistrée.</p>"][0];
  const rs=`<table><tr><th>Résultat</th><th>Vérification</th><th>Statut</th></tr>${S.resu.map(x=>`<tr><td><b>${esc(x.code)}</b> ${esc(x.libelle)}${x.constat?`<br><i>${esc(x.constat)}</i>`:""}</td><td>${esc(x.verification)}</td><td>${SR[x.statut]}</td></tr>`).join("")}</table>`;
  const suites=S.tach.filter(t=>t.echeance&&t.echeance>="2026-11-30");
  const sv=`${suites.length?`<table><tr><th>Action</th><th>Responsable</th><th>Échéance</th><th>État</th></tr>${suites.map(t=>`<tr><td>${esc(t.titre)}</td><td>${esc(t.responsable||"")}</td><td>${fdate(t.echeance)}</td><td>${SL[t.statut]}</td></tr>`).join("")}</table>`:"<p>Aucune action enregistrée.</p>"}`;
@@ -995,7 +986,7 @@ function rapportFinal(){
  `<h2>1. Contexte et objectifs</h2><p>Les États généraux de la communication numérique de l’Église néo-apostolique de la RD Congo Ouest ont été organisés par la Cellule de Communication Numérique (CCN – RDC Ouest), sous l’autorité de l’Apôtre de district Elie-Tatien Mukinda, les samedi 28 et dimanche 29 novembre 2026. Les recommandations adoptées par les participants sont soumises à l’Apôtre de district pour appréciation et décision.</p><p><b>Objectifs spécifiques :</b></p><ol>${OSL.map(o=>`<li>${esc(o)}</li>`).join("")}</ol>
  <h2>2. Participation</h2><p>${sam} délégué(s) présent(s) en salle le samedi et ${dim} le dimanche, sur ${ins} inscrits en salle (${REF} attendus).</p><table><tr><th>Structure</th><th>Inscrits en salle</th><th>Samedi</th><th>Dimanche</th></tr>${ps}</table>
  <h2>3. Déroulement</h2>${pg}
- <h2>4. Éléments de cadrage présentés par la CCN – RDC Ouest</h2><p>La CCN a présenté sa mission, son organisation et sa ligne éditoriale. Son travail s’organise en quatre pôles : articles, images et visuels, vidéos et audios, site web et médias sociaux. Le circuit de validation présenté va de la production au contrôle par le responsable de pôle, à l’avis de la coordination CCN, puis à l’autorisation de l’éditeur principal avant diffusion : aucune publication sans cette autorisation finale. Le plan éditorial proposé distingue quatre axes de contenu (édification spirituelle ; information et vie de l’Église ; histoire, foi et commissions ; enseignement et formation) et un rôle principal pour chaque canal (site web, Facebook, WhatsApp, YouTube, TikTok). Ces éléments sont des propositions présentées aux participants.</p>
+ <h2>4. Éléments de cadrage présentés par la CCN – RDC Ouest</h2><p>La CCN a présenté sa mission, son organisation et sa ligne éditoriale. Son travail s’organise en quatre pôles : articles, images et visuels, vidéos et audios, site web et médias sociaux. Le circuit de validation présenté va de la production au contrôle par le responsable de pôle, à l’avis de la coordination CCN, puis à l’autorisation de l’éditeur principal avant diffusion : aucune publication sans cette autorisation finale. Le plan éditorial proposé distingue quatre axes de contenu (édification spirituelle ; information et vie de l’Église ; histoire, foi et commissions ; enseignement et formation) et un rôle principal pour chaque canal (site web, Facebook, WhatsApp, YouTube, TikTok). Ces éléments sont des propositions présentées aux participants.</p><h3>Interventions des experts (d’après les supports remis)</h3><ul><li><b>Intelligence artificielle et rédaction des textes (Éric Wanet).</b> L’IA assiste, l’humain vérifie et valide. Méthode : formuler, générer, affiner, vérifier et valider. Cinq contrôles avant publication : faits, doctrine, personnes, identité, validation. L’IA n’est ni une source infaillible, ni un témoin des événements, ni une autorité doctrinale.</li><li><b>Intelligence artificielle, images et vidéos (Éric Wanet).</b> Produire vite n’est pas concevoir : le message, la direction artistique et la validation restent humains. Quatre dérives à éviter : affiches standardisées, IA sans direction humaine, visuels hors normes, plagiat et droits. Chaîne recommandée : brief, IA, retouche, contrôle CCN, export.</li><li><b>Gestion des réseaux sociaux (Éric Wanet).</b> Adapter la stratégie à la connectivité, aux langues et aux publics ; sécuriser les comptes (double administration, authentification à deux facteurs, registre) ; gérer une crise numérique : observer, qualifier, documenter et alerter la CCN sous deux heures, répondre ; mesurer la portée, l’engagement et l’action. Les fréquences de publication présentées sont des propositions.</li></ul>
  <h2>5. Travaux des ateliers</h2>${at}
  <h2>6. Échanges et questions</h2>${qa}
  <h2>7. Recommandations</h2>${rc}
@@ -1012,5 +1003,6 @@ document.body.addEventListener("click",async e=>{
 
 init();
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script></body>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
 </html>
