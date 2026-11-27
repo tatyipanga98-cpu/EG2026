@@ -67,7 +67,7 @@ section.v{animation:fade .45s cubic-bezier(.2,.7,.2,1) both}
 .pill{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:99px;font:600 11.5px Inter;background:var(--bg2);color:var(--mut);border:1px solid var(--line);white-space:nowrap}
 .pill.or{color:var(--or);border-color:color-mix(in srgb,var(--or) 40%,transparent)}
 .sel{min-height:44px;min-width:150px;background:var(--bg);color:var(--fg);border:1px solid var(--line2);border-radius:12px;padding:0 12px;font-size:16px}
-.sel:disabled{opacity:.55}
+.sel{cursor:pointer}.sel:disabled{opacity:.55;cursor:not-allowed}
 .err{color:var(--warn);font-size:14px;min-height:20px}
 /* rows */
 .list{display:grid}
@@ -416,7 +416,7 @@ const db=supabase.createClient("https://pjwpmudfbhgasmsuziny.supabase.co","sb_pu
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const REF=58,EVENT=new Date("2026-11-28T09:00:00+01:00");
-const ROLES={administrateur:"Administrateur",secretariat:"Secrétariat technique",facilitateur:"Facilitateur",rapporteur:"Rapporteur"};
+const ROLES={administrateur:"Administrateur",secretariat:"Secrétariat technique",facilitateur:"Facilitateur",rapporteur:"Rapporteur",delegue:"Délégué",apotre:"Apôtre"};
 const CAN={pres:["administrateur","secretariat","facilitateur"],del:["administrateur","secretariat"],prog:["administrateur","secretariat"],res:["administrateur","secretariat","facilitateur","rapporteur"],reco:["administrateur","secretariat","facilitateur","rapporteur"],reco_st:["administrateur","secretariat"],ques:["administrateur","secretariat","facilitateur","rapporteur"],ques_m:["administrateur","secretariat"],sus:["administrateur","secretariat"],tach:["administrateur","secretariat"],docs:["administrateur","secretariat","rapporteur"],adm:["administrateur"],jr:["administrateur","secretariat"],bud:["administrateur","secretariat"]};
 const can=k=>CAN[k].includes(S.role);
 const S={user:null,role:null,nom:"",v:"home",day:"samedi",q:"",fs:0,fx:"Tous",fq:"Toutes",sel:1,open:null,str:[],del:[],pres:{},rec:[],res:{},ques:[],suivi:{},prog:[],ate:[],tach:[],docs:[],livr:[],bl:[],bd:[],par:{},resu:[],profs:[],audit:[]};
@@ -757,7 +757,7 @@ function renderRapport(){
 /* ========== comptes & journal ========== */
 function renderComptes(){
  if(typing("#cl"))return;
- $("#cl").innerHTML=S.profs.map(p=>{const me=p.id===S.user.id;return`<div class="row"><div class="av">${esc((p.nom||"?")[0])}</div><div class="b"><div class="n">${esc(p.nom)}${me?" (vous)":""}</div></div>
+ $("#cl").innerHTML=S.profs.map(p=>{const me=p.id===S.user.id;return`<div class="row"><div class="av">${esc((p.nom||"?")[0])}</div><div class="b"><div class="n">${esc(p.nom)}${me?" (vous)":""}</div>${me?'<div class="meta">Votre rôle ne peut pas être modifié ici</div>':""}</div>
   <select class="sel" data-role="${p.id}" aria-label="Rôle de ${esc(p.nom)}" ${me?"disabled":""}>${Object.keys(ROLES).map(r=>`<option value="${r}" ${r===p.role?"selected":""}>${ROLES[r]}</option>`).join("")}</select>
   <button class="st ${p.actif?"s2":"s0"}" data-active="${p.id}" ${me?"disabled":""}>${p.actif?"Actif":"Désactivé"}</button></div>`}).join("")||`<div class="empty"><h3>Aucun compte</h3></div>`;
 }
