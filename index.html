@@ -797,7 +797,7 @@ $("#dgok").onclick=async()=>{
   if(ty==="structure")v=+v;else if(ty==="number")v=v===""?null:+v;else if(v==="")v=null;p[key]=v}
  if(k==="compte"){if(p.password.length<8){toast("Mot de passe : 8 caractères minimum");return}
   const {data,error}=await db.functions.invoke("admin-create-user",{body:p});
-  if(error||data?.error){toast(data?.error||"Création impossible");return}
+  if(error||data?.error){console.error("EG2026 création compte:",error||data?.error);toast(data?.error||error?.message||"Création impossible");return}
   $("#dg").close();await load();draw();toast("Compte créé");return}
  if(k==="reco"&&!row){p.source="atelier";p.statut="propose"}
  if(k==="programme"&&!row){const {data}=await db.from("programme").select("ordre").order("ordre",{ascending:false}).limit(1);p.ordre=(data?.[0]?.ordre||0)+1}
