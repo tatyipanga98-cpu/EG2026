@@ -210,7 +210,7 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
     <h1 style="margin-top:14px">Préparer, suivre et <span class="serif-i">consolider</span> les travaux.</h1>
     <p class="lead mut" style="margin-top:16px;max-width:420px">Programme, intervenants, ateliers, recommandations et rapport final, au même endroit et en temps réel.</p>
    </div>
-   <p class="xs dim">Samedi 28 et dimanche 29 novembre 2026 · Limete, Kinshasa</p>
+   <p class="xs dim">Samedi 28 et dimanche 29 novembre 2026 · Limete Central, Kinshasa</p>
   </div>
   <form class="frm" id="fl" novalidate>
    <p class="eyebrow">Connexion</p>
@@ -414,6 +414,7 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
 <script>
 const db=supabase.createClient("https://pjwpmudfbhgasmsuziny.supabase.co","sb_publishable_6tMXrRFRfX0AmLnfp_xMbQ_qFPLMZ5S");
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const safeUrl=u=>/^https?:\/\//i.test(String(u||""))?esc(u):"#";
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const REF=58,EVENT=new Date("2026-11-28T09:00:00+01:00");
 const ROLES={administrateur:"Administrateur",secretariat:"Secrétariat technique",facilitateur:"Facilitateur",rapporteur:"Rapporteur",delegue:"Délégué",apotre:"Apôtre"};
@@ -444,7 +445,7 @@ function csv(name,rows){const t="\ufeff"+rows.map(x=>x.map(c=>`"${String(c??"").
 function pdf(title,body){const w=window.open("","_blank");if(!w){toast("Autorisez les fenêtres pour exporter le PDF");return}
  w.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{margin:16mm}body{font:13px/1.55 Georgia,serif;color:#111;margin:0;padding:24px}h1{font:600 22px Georgia,serif;margin:0 0 4px}h2{font:600 16px Georgia,serif;margin:22px 0 8px;border-bottom:1px solid #bbb;padding-bottom:4px}h3{font:600 14px Georgia,serif;margin:14px 0 4px}table{width:100%;border-collapse:collapse;font:12px Arial,sans-serif}td,th{border-bottom:1px solid #ddd;padding:6px;text-align:left;vertical-align:top}th{background:#f3efe4}.sm{font:12px Arial,sans-serif;color:#555}.hd{border-bottom:2px solid #9a6e1c;padding-bottom:10px;margin-bottom:18px}</style></head><body>${body}</body></html>`);
  w.document.close();w.focus();setTimeout(()=>w.print(),350)}
-const head=(t,sub)=>`<div class="hd"><div class="sm">ÉGLISE NÉO-APOSTOLIQUE DE LA R.D CONGO OUEST · CCN – RDC OUEST</div><h1>${esc(t)}</h1><div class="sm">${esc(sub||"États généraux de la communication numérique · 28 et 29 novembre 2026 · Limete")}</div></div>`;
+const head=(t,sub)=>`<div class="hd"><div class="sm">ÉGLISE NÉO-APOSTOLIQUE DE LA R.D CONGO OUEST · CCN – RDC OUEST</div><h1>${esc(t)}</h1><div class="sm">${esc(sub||"États généraux de la communication numérique · 28 et 29 novembre 2026 · Limete Central")}</div></div>`;
 const waNum=t=>{let n=String(t||"").replace(/[^\d]/g,"");if(n.startsWith("00"))n=n.slice(2);if(n.startsWith("0"))n="243"+n.slice(1);return n};
 const waLink=(tel,msg)=>{const n=waNum(tel);return n?`https://wa.me/${n}?text=${encodeURIComponent(msg)}`:"#"};
 const RAPPEL="États généraux de la communication numérique. Samedi 28 novembre, de 09h00 à 16h00 ; dimanche 29 novembre, de 13h00 à 16h00. Salle de conférence de l’administration, N°11, 18ème Rue Poids Lourd, Limete. Merci de confirmer votre présence. — Secrétariat technique, CCN – RDC Ouest";
@@ -574,6 +575,7 @@ function draw(){const v=S.v;({home:renderHome,direct:renderDirect,acc:renderAcc,
 /* ========== vue d’ensemble ========== */
 const pos=i=>{const o=i<=11,j=o?i-1:i-12,n=o?11:5,r=o?136:66,a=j/n*Math.PI*2-Math.PI/2+(o?0:Math.PI/5);return[170+r*Math.cos(a),170+r*Math.sin(a)]};
 function renderHome(){
+ $("#rl").textContent=`${ROLES[S.role]||S.role} · ${S.del.length} délégué(s) enregistré(s)`;
  const d=Math.ceil((EVENT-new Date())/864e5);
  $("#cd").textContent=d>1?`J-${d} · Samedi 28 et dimanche 29 novembre`:d===1?"Demain · Samedi 28 novembre":"Les États généraux sont en cours";
  const tot=S.del.filter(estPresent).length;
@@ -733,7 +735,7 @@ function renderTach(){
   return`<div class="row"><div class="b"><div class="n" style="${t.statut==="fait"?"text-decoration:line-through;color:var(--dim)":""}">${esc(t.titre)}</div><div class="meta">${esc(t.responsable||"Responsable à désigner")}${t.echeance?` · <span style="color:${over?"var(--warn)":"inherit"}">échéance ${fdate(t.echeance)}${over?" · en retard":""}</span>`:""}</div>${t.description?`<div class="meta" style="margin-top:6px">${esc(t.description)}</div>`:""}</div>
   <button class="st ${SC[t.statut]}" data-cycle="taches:${t.id}" ${cn?"":"disabled"}>${SL[t.statut]}</button>${cn?`<button class="ib" data-edit="taches:${t.id}" aria-label="Modifier">${PEN}</button><button class="ib" data-del="taches:${t.id}" aria-label="Supprimer">${TRH}</button>`:""}</div>`}).join(""):`<div class="empty"><h3>Aucune tâche</h3></div>`;
 }
-function listSimple(L,t,cols,cn,table){return L.length?L.map(x=>`<div class="row"><div class="b"><div class="n">${x.lien?`<a href="${esc(x.lien)}" target="_blank" rel="noopener" style="color:inherit">${esc(x.titre)}</a>`:esc(x.titre)}</div><div class="meta">${cols(x)}</div></div>${x.statut!==undefined&&table==="livrables"?`<button class="st ${SC[x.statut]}" data-cycle="livrables:${x.id}" ${cn?"":"disabled"}>${SL[x.statut]}</button>`:""}${cn?`<button class="ib" data-edit="${table}:${x.id}" aria-label="Modifier">${PEN}</button><button class="ib" data-del="${table}:${x.id}" aria-label="Supprimer">${TRH}</button>`:""}</div>`).join(""):`<div class="empty"><h3>Rien pour l’instant</h3><p>Ajoutez le premier élément avec le bouton ci-dessus.</p></div>`}
+function listSimple(L,t,cols,cn,table){return L.length?L.map(x=>`<div class="row"><div class="b"><div class="n">${x.lien?`<a href="${safeUrl(x.lien)}" target="_blank" rel="noopener" style="color:inherit">${esc(x.titre)}</a>`:esc(x.titre)}</div><div class="meta">${cols(x)}</div></div>${x.statut!==undefined&&table==="livrables"?`<button class="st ${SC[x.statut]}" data-cycle="livrables:${x.id}" ${cn?"":"disabled"}>${SL[x.statut]}</button>`:""}${cn?`<button class="ib" data-edit="${table}:${x.id}" aria-label="Modifier">${PEN}</button><button class="ib" data-del="${table}:${x.id}" aria-label="Supprimer">${TRH}</button>`:""}</div>`).join(""):`<div class="empty"><h3>Rien pour l’instant</h3><p>Ajoutez le premier élément avec le bouton ci-dessus.</p></div>`}
 function renderDocs(){$("#dl").innerHTML=listSimple(S.docs,"",x=>[x.categorie,x.notes].filter(Boolean).map(esc).join(" · "),can("docs"),"documents")}
 function renderLivr(){$("#ll").innerHTML=listSimple(S.livr,"",x=>[x.echeance?"échéance "+fdate(x.echeance):"",x.notes].filter(Boolean).map(esc).join(" · "),can("docs"),"livrables")}
 
