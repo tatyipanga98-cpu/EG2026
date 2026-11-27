@@ -179,10 +179,21 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
 .prgbar{width:min(680px,100%);height:10px;border-radius:99px;background:var(--line);overflow:hidden}.prgbar i{display:block;height:100%;background:linear-gradient(90deg,var(--or2),var(--or));transition:width .9s linear}
 .warnb{animation:pulse 1s ease-in-out infinite alternate;color:var(--warn);border-color:var(--warn)}
 @keyframes pulse{from{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 0%,transparent)}to{box-shadow:0 0 0 14px color-mix(in srgb,var(--warn) 25%,transparent)}}
+
+/* écran d'ouverture EG2026 */
+#launch{position:fixed;inset:0;z-index:100;background:#081628;display:grid;place-items:center;color:#F5F0E4;transition:opacity .5s ease,visibility .5s}
+#launch.hide{opacity:0;visibility:hidden;pointer-events:none}
+#launch .launch-inner{text-align:center;animation:launch-pop .75s ease both}
+#launch img{width:min(36vw,150px);height:min(36vw,150px);object-fit:contain;margin-bottom:22px;filter:drop-shadow(0 10px 28px #D8B26A30)}
+#launch h1{font:700 32px Fraunces,Georgia,serif;letter-spacing:.05em;color:#F0D59B}
+#launch p{font:500 11px Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#9FB2CC;margin-top:10px}
+#launch .line{width:46px;height:2px;background:#D8B26A;margin:25px auto 0;animation:launch-line 1.2s ease-in-out infinite alternate}
+@keyframes launch-pop{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes launch-line{from{width:24px;opacity:.45}to{width:56px;opacity:1}}
 </style>
 </head>
 <body>
-<div id="off" hidden role="status">Hors ligne : vos saisies sont conservées sur cet appareil et seront envoyées au retour du réseau.</div>
+<div id="launch" aria-label="EG2026"><div class="launch-inner"><img src="/icon.svg" alt="Logo EG2026"><h1>EG2026</h1><p>États généraux · RDC Ouest</p><div class="line"></div></div></div>\n<div id="off" hidden role="status">Hors ligne : vos saisies sont conservées sur cet appareil et seront envoyées au retour du réseau.</div>
 
 <!-- CONNEXION -->
 <div id="v-login" class="acc" hidden>
@@ -1001,7 +1012,7 @@ document.body.addEventListener("click",async e=>{
   const {error}=await db.from("resultats").update({constat:v.trim()||null}).eq("code",x.code);if(error){toast("Modification refusée");return}x.constat=v.trim()||null;renderResu();toast("Constat enregistré")}
 });
 
-init();
+setTimeout(()=>{const l=document.getElementById("launch");if(l)l.classList.add("hide")},1450);\ninit();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
