@@ -515,7 +515,7 @@ async function boot(u){
  $("#tiles").innerHTML=["direct","acc","reco","ques","champs","tach","docs","livr","rapp"].concat(can("bud")?["bud"]:[],can("adm")?["comptes"]:[],can("jr")?["journal"]:[]).map(k=>`<button class="card" data-go="${k}" style="text-align:left;cursor:pointer;display:grid;gap:10px"><span class="eyebrow">${TITLES[k]}</span><span class="sm mut">${({bud:"Prévu, dépenses et reste",direct:"Séquence en cours, chrono et signal",acc:"Scanner les badges, rechercher un délégué",reco:"Propositions, consolidation et adoption",ques:"Questions de la salle",champs:"Fiches et connexion des champs",tach:"Calendrier et points ouverts",docs:"Liens de partage",livr:"Productions attendues",rapp:"Synthèse imprimable",comptes:"Rôles et accès",journal:"Traçabilité"})[k]}</span></button>`).join("");
  $$("#tiles [data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
  $$(".side [data-admin]").forEach(b=>b.hidden=!can("adm"));$$(".side [data-bud]").forEach(b=>b.hidden=!can("bud"));$$(".side [data-audit]").forEach(b=>b.hidden=!can("jr"));
- await load();await flush();go("home");live();
+ await load();$("#rl").textContent=`${ROLES[p.role]||p.role} · ${S.del.length} délégués enregistrés`;await flush();go("home");live();
 }
 $("#fl").onsubmit=async e=>{e.preventDefault();$("#le").textContent="";const email=$("#em").value.trim(),pw=$("#pw").value;
  if(!email||!pw){$("#le").textContent="Saisissez votre e-mail et votre mot de passe.";return}
@@ -539,7 +539,7 @@ async function load(){
   db.from("documents").select("*").order("created_at",{ascending:false}),
   db.from("livrables").select("*").order("created_at",{ascending:false})
  ]);
- S.str=st.data||S.str;S.del=de.data||S.del;S.pres={};(pr.data||[]).forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
+ if(st.error){console.error("EG2026 structures:",st.error);toast("Impossible de charger les structures : "+(st.error.message||"erreur Supabase"));}else{S.str=st.data||[]}if(de.error){console.error("EG2026 delegues:",de.error);toast("La liste des délégués n’a pas pu être chargée : "+(de.error.message||"erreur Supabase"));}else{S.del=de.data||[]}S.pres={};(pr.data||[]).forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
  getQ().forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
  S.rec=re.data||[];S.res={};(rs.data||[]).forEach(x=>S.res[x.atelier_id]=x);
  S.ques=qu.data||[];S.suivi={};(su.data||[]).forEach(x=>S.suivi[x.structure_id]=x);
