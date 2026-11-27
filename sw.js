@@ -1,6 +1,6 @@
 // EG2026 – service worker : coquille de l'app disponible hors ligne.
 // Les données (Supabase) ne sont jamais mises en cache ici.
-const VERSION = "eg2026-v5";
+const VERSION = "eg2026-v10";
 const SHELL = ["/", "/index.html", "/manifest.webmanifest", "/affiche.jpg"];
 
 self.addEventListener("install", (e) => {
