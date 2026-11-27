@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#081628">
+<meta name="theme-color" content="#07164A">
 <meta name="description" content="EG2026 – plateforme du secrétariat technique des États généraux de la communication numérique, RDC Ouest">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#081628;--bg2:#0C1F38;--card:#102A4C;--card2:#0F2643;--line:#22406A;--line2:#2D5282;--fg:#F5F0E4;--mut:#9FB2CC;--dim:#6F86A6;--or:#D8B26A;--or2:#F0D59B;--ok:#6CCFA2;--warn:#F0A08A;--info:#8DB6F5;--on:#081628;--r:20px;--sh:0 1px 0 #ffffff0d inset,0 24px 60px -28px #000c;--glow:0 0 0 1px #D8B26A33,0 10px 30px -10px #D8B26A44;color-scheme:dark;box-sizing:border-box}
-@media (prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#F5F1E7;--bg2:#EDE7D6;--card:#FFFFFF;--card2:#FBF9F4;--line:#E2DACA;--line2:#CFC4AB;--fg:#13233C;--mut:#55647A;--dim:#8592A6;--or:#9A6E1C;--or2:#C29A4E;--ok:#17724F;--warn:#B2452E;--info:#2F5FA8;--on:#FFFFFF;--sh:0 1px 0 #fff inset,0 20px 44px -30px #13233c55;--glow:0 0 0 1px #9A6E1C33;color-scheme:light}}
+:root{--bg:#07164A;--bg2:#0B2168;--card:#102B82;--card2:#0D246D;--line:#24439A;--line2:#3B61C0;--fg:#F7FAFF;--mut:#B8C8F2;--dim:#8EA6DF;--or:#1736C2;--or2:#079CF2;--ok:#55D6A0;--warn:#FF252D;--info:#079CF2;--on:#FFFFFF;--r:20px;--sh:0 1px 0 #ffffff0d inset,0 24px 60px -28px #000c;--glow:0 0 0 1px #1736C233,0 10px 30px -10px #079CF244;color-scheme:dark;box-sizing:border-box}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#F5F8FF;--bg2:#EAF1FF;--card:#FFFFFF;--card2:#F7FAFF;--line:#D5E0FA;--line2:#B8C9F1;--fg:#10235F;--mut:#52669B;--dim:#7C8DB8;--or:#1736C2;--or2:#079CF2;--ok:#177A55;--warn:#E71925;--info:#078FD8;--on:#FFFFFF;--sh:0 1px 0 #fff inset,0 20px 44px -30px #10235F33;--glow:0 0 0 1px #1736C233;color-scheme:light}}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%}
 body{background:radial-gradient(1200px 600px at 10% -10%,color-mix(in srgb,var(--or) 9%,transparent),transparent 60%),radial-gradient(900px 500px at 110% 0%,color-mix(in srgb,var(--info) 10%,transparent),transparent 55%),var(--bg);color:var(--fg);font:400 15.5px/1.6 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
 h1,h2,h3,.serif{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.1;margin:0;letter-spacing:-.02em}
@@ -171,7 +171,7 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
 @media (max-width:640px){.slot{grid-template-columns:64px 1fr auto}.slot .ib{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ring{stroke-dashoffset:0}}
 .fb{min-height:26px;font-weight:700;margin-top:14px;font-size:15px}.fb.ok{color:var(--ok)}.fb.err{color:var(--warn)}
-@media print{:root{--bg:#fff;--bg2:#fff;--card:#fff;--card2:#fff;--fg:#000;--mut:#333;--dim:#555;--line:#ccc;--line2:#aaa;--or:#6b4a10}body{background:#fff}.side,nav.m,#toast,#off,.noprint,.head .btn{display:none!important}.app{display:block}main{padding:0;max-width:none}.card{border:0;box-shadow:none;padding:0;background:#fff}section.v{animation:none}.grp{color:#000}}
+@media print{:root{--bg:#fff;--bg2:#fff;--card:#fff;--card2:#fff;--fg:#000;--mut:#333;--dim:#555;--line:#ccc;--line2:#aaa;--or:#1736C2}body{background:#fff}.side,nav.m,#toast,#off,.noprint,.head .btn{display:none!important}.app{display:block}main{padding:0;max-width:none}.card{border:0;box-shadow:none;padding:0;background:#fff}section.v{animation:none}.grp{color:#000}}
 .dirhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .dircard{padding:clamp(24px,5vw,56px);text-align:center;display:grid;gap:18px;justify-items:center}
 .dircard h2{font-size:clamp(30px,6vw,64px);max-width:900px;line-height:1.05}
@@ -181,13 +181,13 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
 @keyframes pulse{from{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 0%,transparent)}to{box-shadow:0 0 0 14px color-mix(in srgb,var(--warn) 25%,transparent)}}
 
 /* écran d'ouverture EG2026 */
-#launch{position:fixed;inset:0;z-index:100;background:#081628;display:grid;place-items:center;color:#F5F0E4;transition:opacity .5s ease,visibility .5s}
+#launch{position:fixed;inset:0;z-index:100;background:#07164A;display:grid;place-items:center;color:#F7FAFF;transition:opacity .5s ease,visibility .5s}
 #launch.hide{opacity:0;visibility:hidden;pointer-events:none}
-#launch .launch-inner{text-align:center;animation:launch-pop .75s ease both;padding:30px 24px;max-width:360px;width:90%;border:1px solid #D8B26A55;border-radius:28px;background:linear-gradient(160deg,#102A4C,#081628);box-shadow:0 24px 60px #0008,0 0 28px #D8B26A18}
-#launch img{width:min(48vw,190px);height:min(48vw,190px);object-fit:contain;margin:0 auto 18px;display:block;border-radius:20px;filter:drop-shadow(0 8px 24px #D8B26A22)}
-#launch h1{font:700 32px Fraunces,Georgia,serif;letter-spacing:.05em;color:#F0D59B}
-#launch p{font:500 11px Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#9FB2CC;margin-top:10px}
-#launch .line{width:46px;height:2px;background:#D8B26A;margin:25px auto 0;animation:launch-line 1.2s ease-in-out infinite alternate}
+#launch .launch-inner{text-align:center;animation:launch-pop .75s ease both;padding:30px 24px;max-width:360px;width:90%;border:1px solid #1736C255;border-radius:28px;background:linear-gradient(160deg,#102A4C,#07164A);box-shadow:0 24px 60px #0008,0 0 28px #1736C218}
+#launch img{width:min(48vw,190px);height:min(48vw,190px);object-fit:contain;margin:0 auto 18px;display:block;border-radius:20px;filter:drop-shadow(0 8px 24px #079CF222)}
+#launch h1{font:700 32px Fraunces,Georgia,serif;letter-spacing:.05em;color:#079CF2}
+#launch p{font:500 11px Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#B8C8F2;margin-top:10px}
+#launch .line{width:46px;height:2px;background:#1736C2;margin:25px auto 0;animation:launch-line 1.2s ease-in-out infinite alternate}
 @keyframes launch-pop{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
 @keyframes launch-line{from{width:24px;opacity:.45}to{width:56px;opacity:1}}
 </style>
@@ -745,7 +745,7 @@ function renderRapport(){
  const pg=S.prog.map(p=>`<tr><td>${esc(p.jour)} ${hm(p.debut)}</td><td>${esc(p.titre)}</td><td>${esc(p.intervenant||"—")}</td><td>${SL[p.statut]}</td></tr>`).join("");
  const at=S.ate.map(a=>{const r=S.res[a.id]||{};return`<h3>Atelier ${a.id} · ${esc(a.titre)}</h3><p class="sm mut">Rapporteur : ${esc(r.rapporteur||"—")} · ${SL[r.statut||"a_faire"]}</p>${[1,2,3,4,5,6].filter(i=>(r["q"+i]||"").trim()).map(i=>`<p style="margin-top:8px"><b>${i}.</b> ${esc(r["q"+i])}</p>`).join("")||'<p class="sm mut">Fiche non rédigée.</p>'}`}).join("");
  const rc=A.map(x=>{const L=S.rec.filter(r=>r.axe===x);return L.length?`<h3>Axe ${x}</h3>`+L.map(r=>`<p style="margin:6px 0">• ${esc(r.texte)} <b>(${SL[r.statut]})</b></p>`).join(""):""}).join("")||'<p class="mut">Aucune proposition.</p>';
- $("#rapport").innerHTML=`<p class="eyebrow" style="color:#6b4a10">États généraux de la communication numérique · EG2026</p><h2 style="margin:8px 0 4px">Rapport du secrétariat technique</h2><p class="sm mut">Église Néo-Apostolique de la R.D Congo Ouest · généré le ${new Date().toLocaleString("fr-FR")}</p>
+ $("#rapport").innerHTML=`<p class="eyebrow" style="color:#1736C2">États généraux de la communication numérique · EG2026</p><h2 style="margin:8px 0 4px">Rapport du secrétariat technique</h2><p class="sm mut">Église Néo-Apostolique de la R.D Congo Ouest · généré le ${new Date().toLocaleString("fr-FR")}</p>
  <h3 style="margin:26px 0 10px">1. Présences par structure</h3><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13.5px"><tr><th style="text-align:left">Structure</th><th>Inscrits</th><th>En salle</th><th>Samedi</th><th>Dimanche</th></tr>${tr}</table></div>
  <h3 style="margin:26px 0 10px">2. Programme et intervenants</h3><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr><th style="text-align:left">Horaire</th><th style="text-align:left">Séquence</th><th style="text-align:left">Intervenant</th><th>Statut</th></tr>${pg}</table></div>
  <h3 style="margin:26px 0 10px">3. Restitutions des ateliers</h3>${at}
@@ -909,7 +909,7 @@ async function badges(){
  if(!S.del.length){toast("Aucun délégué enregistré");return}
  toast("Préparation des badges…");
  const cards=[];
- for(const d of S.del){const url=await QRCode.toDataURL("EG26:"+d.id,{margin:1,width:240,color:{dark:"#081628",light:"#ffffff"}});
+ for(const d of S.del){const url=await QRCode.toDataURL("EG26:"+d.id,{margin:1,width:240,color:{dark:"#07164A",light:"#ffffff"}});
   cards.push(`<div class="bd"><div class="bh">EG2026 · ÉTATS GÉNÉRAUX</div><img src="${url}" alt="QR ${esc(nm(d))}"><div class="bn">${esc(nm(d))}</div><div class="bs">${esc(S.str.find(x=>x.id===d.structure_id)?.nom||"")}</div></div>`)}
  pdf("Badges des délégués",`<style>.bgs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.bd{border:1px solid #888;border-radius:8px;padding:8px;text-align:center;break-inside:avoid}.bd img{width:118px;height:118px}.bh{font:700 8.5px Arial,sans-serif;letter-spacing:.12em;color:#9a6e1c}.bn{font:700 12px Arial,sans-serif;margin-top:4px}.bs{font:10px Arial,sans-serif;color:#555}</style>`+head("Badges des délégués","Présenter le badge à l’entrée pour le pointage")+`<div class="bgs">${cards.join("")}</div>`);
 }
