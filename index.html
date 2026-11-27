@@ -741,7 +741,22 @@ function renderComptes(){
   <select class="f" style="min-height:40px;width:auto;padding:0 12px;border-radius:12px" data-role="${p.id}" aria-label="Rôle de ${esc(p.nom)}" ${me?"disabled":""}>${Object.keys(ROLES).map(r=>`<option value="${r}" ${r===p.role?"selected":""}>${ROLES[r]}</option>`).join("")}</select>
   <button class="st ${p.actif?"s2":"s0"}" data-active="${p.id}" ${me?"disabled":""}>${p.actif?"Actif":"Désactivé"}</button></div>`}).join("")||`<div class="empty"><h3>Aucun compte</h3></div>`;
 }
-$("#cl").addEventListener("change",async e=>{const s=e.target.closest("[data-role]");if(!s)return;const {error}=await db.from("profiles").update({role:s.value}).eq("id",s.dataset.role);toast(error?"Modification refusée":"Rôle mis à jour");await load();renderComptes()});
+$("#cl").addEventListener("change",async e=>{
+ const s=e.target.closest("[data-role]");if(!s)return;
+ const ancien=S.profs.find(p=>p.id===s.dataset.role)?.role;
+ const nouveau=s.value;s.disabled=true;
+ try{
+  const {data,error}=await db.from("profiles").update({role:nouveau}).eq("id",s.dataset.role).select("id,role").maybeSingle();
+  if(error)throw error;
+  if(!data){s.value=ancien||"";toast("Rôle non modifié : compte introuvable ou droits insuffisants.");return}
+  const p=S.profs.find(x=>x.id===data.id);if(p)p.role=data.role;
+  toast("Rôle mis à jour : "+(ROLES[data.role]||data.role));
+  await load();renderComptes();
+ }catch(err){
+  s.value=ancien||"";console.error("EG2026 changement de rôle:",err);
+  toast("Échec du changement de rôle : "+(err.message||"erreur Supabase"));
+ }finally{s.disabled=false}
+});
 $("#cl").addEventListener("click",async e=>{const b=e.target.closest("[data-active]");if(!b)return;const p=S.profs.find(x=>x.id===b.dataset.active);const {error}=await db.from("profiles").update({actif:!p.actif}).eq("id",p.id);toast(error?"Modification refusée":"Accès mis à jour");await load();renderComptes()});
 const OP={INSERT:"Ajout",UPDATE:"Modification",DELETE:"Suppression"},TB={delegues:"délégué",recommandations:"recommandation",taches:"tâche",programme:"séance",documents:"document",livrables:"livrable",profiles:"compte",restitutions:"restitution",questions:"question",suivi_structures:"suivi de champ",budget_lignes:"ligne de budget",budget_depenses:"dépense",resultats:"résultat attendu"};
 function renderJournal(){const N={};S.profs.forEach(p=>N[p.id]=p.nom);
