@@ -177,3 +177,49 @@ select
   (select count(*) from recommandations where statut = 'propose') as propose,
   (select count(*) from recommandations where statut = 'consolide') as consolide,
   (select count(*) from recommandations where statut = 'adopte') as adopte;
+
+-- ===== Migration eg2026_durcissement_et_temps_reel (déjà appliquée) =====
+alter view public.tableau_bord set (security_invoker = true);
+revoke execute on function public.current_role_eg() from public, anon;
+grant execute on function public.current_role_eg() to authenticated;
+revoke execute on function public.eg_maj_reco() from public, anon, authenticated;
+alter table public.delegues add constraint delegues_nom_prenom_structure_uniq unique (nom, prenom, structure_id);
+create index if not exists delegues_structure_idx on public.delegues(structure_id);
+create index if not exists reco_statut_idx on public.recommandations(statut);
+create index if not exists presences_jour_idx on public.presences(jour);
+alter publication supabase_realtime add table public.presences, public.recommandations, public.delegues, public.restitutions;
+
+-- ===== Migration eg2026_modules_delegues_audit (déjà appliquée) =====
+-- Comptes désactivables, titre des délégués, tables programme / tâches / documents / livrables,
+-- journal d'activité (audit_log + déclencheurs) et rôle sensible au statut actif.
+-- Les 58 délégués et les 2 séances du programme ont été chargés depuis la liste officielle
+-- (Liste_delegues_EG2026.pdf) et l'affiche. Voir l'historique des migrations du projet Supabase.
+alter table public.profiles add column if not exists actif boolean not null default true;
+alter table public.delegues add column if not exists titre text;
+create or replace function public.current_role_eg() returns eg_role
+language sql stable security definer set search_path = public as $$
+  select role from profiles where id = auth.uid() and actif
+$$;
+create table public.programme (id uuid primary key default gen_random_uuid(), jour text not null check (jour in ('samedi','dimanche')), debut time, fin time, titre text not null, lieu text, notes text, created_at timestamptz not null default now());
+create table public.taches (id uuid primary key default gen_random_uuid(), titre text not null, description text, responsable text, echeance date, statut text not null default 'a_faire' check (statut in ('a_faire','en_cours','fait')), created_at timestamptz not null default now());
+create table public.documents (id uuid primary key default gen_random_uuid(), titre text not null, categorie text, lien text, notes text, created_at timestamptz not null default now());
+create table public.livrables (id uuid primary key default gen_random_uuid(), titre text not null, statut text not null default 'a_faire' check (statut in ('a_faire','en_cours','livre')), echeance date, lien text, notes text, created_at timestamptz not null default now());
+create table public.audit_log (id bigint generated always as identity primary key, user_id uuid, table_name text not null, op text not null, row_id text, detail text, at timestamptz not null default now());
+-- Lecture : tout utilisateur connecté. Écriture : programme et tâches = administrateur, secrétariat ;
+-- documents et livrables = + rapporteur. Journal : lecture administrateur, secrétariat.
+-- Déclencheur eg_audit() sur delegues, recommandations, taches, programme, documents, livrables, profiles.
+
+-- ===== Migration secretariat_technique_programme_ateliers_suivi (déjà appliquée) =====
+-- programme : code, intervenant, ordre, statut (a_confirmer / confirme / realise) ; 27 séances du programme officiel
+-- ateliers : facilitateurs officiels ; restitutions : rapporteur, six questions-guides (q1..q6), statut (a_faire / en_cours / remise)
+-- questions : questions de la salle (salle / écrit / en ligne), réponses, statut ; RLS : lecture connectés, écriture secrétariat
+-- suivi_structures : fiche de désignation, diagnostic, lien et test de connexion, point focal ; RLS : écriture secrétariat
+-- recommandations : source (atelier / memo / plenière), ref ; 13 propositions du mémo initial (statut proposé)
+-- taches : 20 tâches du calendrier (pré-événement et post-événement)
+-- delegues : telephone, domaine, mode (presentiel / distance) ; Jean Bosco Pongo à distance
+
+-- ===== Migration budget_et_programme_final (déjà appliquée) =====
+-- parametres (taux_usd_cdf = 2350), budget_lignes (rubriques traiteur / location / communication / imprevu, devise USD ou CDF),
+-- budget_depenses (rattachées à une ligne, devise héritée de la ligne). RLS : administrateur et secrétariat uniquement.
+-- Totaux chargés depuis le document officiel : 1 682 $ et 205 100 FC (arrondi du document : 1 770 $ avec imprévu).
+-- Programme officiel remplacé par la version finale (28 séquences). Atelier 6 : Prêtre Prince Masua et les modérateurs.
