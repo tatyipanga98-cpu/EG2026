@@ -558,6 +558,8 @@ async function boot(u){
  $("#tiles").innerHTML=["direct","acc","reco","ques","champs","tach","docs","livr","rapp"].filter(visOk).concat(can("bud")?["bud"]:[],can("adm")?["comptes"]:[],can("jr")?["journal"]:[]).map(k=>`<button class="card" data-go="${k}" style="text-align:left;cursor:pointer;display:grid;gap:10px"><span class="eyebrow">${TITLES[k]}</span><span class="sm mut">${({bud:"Prévu, dépenses et reste",direct:"Séquence en cours, chrono et signal",acc:"Scanner les badges, rechercher un délégué",reco:"Propositions, consolidation et adoption",ques:"Questions de la salle",champs:"Fiches et connexion des champs",tach:"Calendrier et points ouverts",docs:"Liens de partage",livr:"Productions attendues",rapp:"Synthèse imprimable",comptes:"Rôles et accès",journal:"Traçabilité"})[k]}</span></button>`).join("");
  $$("#tiles [data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
  $$("[data-go]").forEach(b=>{if(VIS[b.dataset.go])b.hidden=!visOk(b.dataset.go)});
+ $("#todo").closest(".card").hidden=!["administrateur","secretariat"].includes(p.role);
+ const sensibleAccueil=["administrateur","secretariat","facilitateur"].includes(p.role);$(".card.hero").hidden=!sensibleAccueil;$("#kpi").hidden=!sensibleAccueil;
  $$(".side [data-admin]").forEach(b=>b.hidden=!can("adm"));$$(".side [data-bud]").forEach(b=>b.hidden=!can("bud"));$$(".side [data-audit]").forEach(b=>b.hidden=!can("jr"));
  try{await load();await flush()}catch(e){console.error("Chargement des données EG2026",e);toast("Connexion établie, mais certaines données n’ont pas chargé. Réessayez.");}go("home");live();
 }
