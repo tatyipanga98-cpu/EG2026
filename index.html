@@ -548,11 +548,12 @@ const login=()=>{$("#app").hidden=true;$("#v-login").hidden=false;S.user=null};
 
 /* ========== connexion ========== */
 async function init(){net();try{const result=await db.auth.getSession();const session=result?.data?.session;session?await boot(session.user):login()}catch(e){console.warn("Initialisation EG2026",e);login();$("#le").textContent="Connexion réseau lente ou indisponible. Vous pouvez réessayer."}}
+const prenomDe=nom=>{let s=String(nom||"").trim();let t;do{t=s;s=s.replace(/^(Prêtre|Pr|Frère|Fr|Diacre|Dc|Apôtre|Ap|Sœur|Soeur|Sr|Dr)\.?\s+/i,"")}while(s!==t);return(s.split(/\s+/)[0]||nom||"")};
 async function boot(u){
- const {data:p,error}=await db.from("profiles").select("nom,role,actif").eq("id",u.id).maybeSingle();
+ const {data:p,error}=await db.from("profiles").select("nom,role,actif,appel").eq("id",u.id).maybeSingle();
  if(error||!p||p.actif===false){await db.auth.signOut();$("#le").textContent="Ce compte n’est pas encore activé. Contactez le secrétariat.";return login()}
  S.user=u;S.role=p.role;S.nom=p.nom;$("#v-login").hidden=true;$("#app").hidden=false;
- $("#hi").textContent="Bonjour, "+p.nom.split(" ")[0];
+ $("#hi").textContent="Bonjour, "+(p.appel||prenomDe(p.nom));
  $("#rl").textContent=`${ROLES[p.role]||p.role} · ${S.del.length||0} délégués enregistrés`;
  $("#me").textContent=p.nom+" · "+(ROLES[p.role]||p.role);
  $("#tiles").innerHTML=["direct","acc","reco","ques","champs","tach","docs","livr","rapp"].filter(visOk).concat(can("bud")?["bud"]:[],can("adm")?["comptes"]:[],can("jr")?["journal"]:[]).map(k=>`<button class="card" data-go="${k}" style="text-align:left;cursor:pointer;display:grid;gap:10px"><span class="eyebrow">${TITLES[k]}</span><span class="sm mut">${({bud:"Prévu, dépenses et reste",direct:"Séquence en cours, chrono et signal",acc:"Scanner les badges, rechercher un délégué",reco:"Propositions, consolidation et adoption",ques:"Questions de la salle",champs:"Fiches et connexion des champs",tach:"Calendrier et points ouverts",docs:"Liens de partage",livr:"Productions attendues",rapp:"Synthèse imprimable",comptes:"Rôles et accès",journal:"Traçabilité"})[k]}</span></button>`).join("");
