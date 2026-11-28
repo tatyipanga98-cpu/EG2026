@@ -450,7 +450,7 @@ const db=supabase.createClient("https://pjwpmudfbhgasmsuziny.supabase.co","sb_pu
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const safeUrl=u=>/^https?:\/\//i.test(String(u||""))?esc(u):"#";
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const REF=58,EVENT=new Date("2026-11-28T09:00:00+01:00");
+let REF=58,EVENT=new Date("2026-11-28T09:00:00+01:00");
 const ROLES={administrateur:"Administrateur",secretariat:"Secrétariat technique",facilitateur:"Facilitateur",rapporteur:"Rapporteur",delegue:"Délégué",apotre:"Apôtre"};
 const CAN={pres:["administrateur","secretariat","facilitateur"],del:["administrateur","secretariat"],prog:["administrateur","secretariat"],res:["administrateur","secretariat","facilitateur","rapporteur"],reco:["administrateur","secretariat","facilitateur","rapporteur"],reco_st:["administrateur","secretariat"],ques:["administrateur","secretariat","facilitateur","rapporteur"],ques_m:["administrateur","secretariat"],sus:["administrateur","secretariat"],tach:["administrateur","secretariat"],docs:["administrateur","secretariat","rapporteur"],adm:["administrateur"],jr:["administrateur","secretariat"],bud:["administrateur","secretariat"]};
 const can=k=>CAN[k].includes(S.role);
@@ -612,7 +612,7 @@ async function load(){
   db.from("documents").select("*").order("created_at",{ascending:false}),
   db.from("livrables").select("*").order("created_at",{ascending:false})
  ]);
- S.str=st.data||S.str;S.del=de.data||S.del;S.pres={};(pr.data||[]).forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
+ S.str=st.data||S.str;S.del=de.data||S.del;REF=S.del.filter(d=>d.mode!=="distance").length||REF;S.pres={};(pr.data||[]).forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
  getQ().forEach(x=>S.pres[x.delegue_id+"|"+x.jour]=x.present);
  S.rec=re.data||[];S.res={};(rs.data||[]).forEach(x=>S.res[x.atelier_id]=x);
  S.ques=qu.data||[];S.suivi={};(su.data||[]).forEach(x=>S.suivi[x.structure_id]=x);
