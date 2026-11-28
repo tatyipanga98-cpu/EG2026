@@ -288,6 +288,7 @@ dialog::backdrop{background:#02080fcc;backdrop-filter:blur(5px)}dialog form{disp
     <div class="card"><p class="eyebrow">Graphique</p><h3 style="margin:10px 0 6px">Recommandations par axe</h3><div id="chReco"></div></div>
     <div class="card"><p class="eyebrow">Graphique</p><h3 style="margin:10px 0 6px">Restitutions des ateliers</h3><div id="chRes"></div></div>
    </div>
+   <div class="card" style="margin-top:16px"><p class="eyebrow">Diagnostic</p><h3 style="margin:10px 0 6px">Constats du diagnostic</h3><p class="sm mut" style="margin-bottom:6px">24 fiches reçues : 20 champs apostoliques et 4 commissions territoriales.</p><div id="chDiag"></div></div>
    <div class="card" style="margin-top:16px;display:grid;grid-template-columns:1fr;gap:20px;align-items:center" id="affiche-card">
     <img src="/affiche.jpg" alt="Affiche des États généraux de la communication numérique" loading="lazy" style="width:100%;max-width:240px;border-radius:16px;border:1px solid var(--line);justify-self:center">
     <div><p class="eyebrow">Événement</p><h3 style="margin:10px 0 10px">États généraux de la communication numérique</h3><p class="mut sm">Église Néo-Apostolique de la R.D Congo Ouest · Cellule de Communication Numérique</p><ul class="sm mut" style="margin:14px 0 0;padding-left:18px;display:grid;gap:6px"><li>Samedi 28 novembre 2026, 09h00 – 16h00</li><li>Dimanche 29 novembre 2026, 13h00 – 16h00</li><li>Salle de conférence de l’administration, N°11, 18ème Rue Poids Lourd, Limete</li><li>Participation sur invitation</li></ul></div>
@@ -648,8 +649,21 @@ function chResu(){const el=$("#chResu");if(!el)return;
  el.innerHTML=S.resu.map(x=>{const[t,c]=L[x.statut]||L.a_faire;return stkRow(x.code,[[1,c,t]],1,t,`${x.code} · ${x.libelle} : ${t}`)}).join("")
   +legendC([["--s1","Atteint"],["--s2","Partiel"],["--line2","À faire"]]);
 }
+/* Synthèse du diagnostic : fiches reçues (champs apostoliques et commissions), chiffres agrégés, sans données personnelles. */
+const DIAG={n:24,blocs:[
+["Contraintes principales",[["Manque de matériel",21],["Manque de personnel formé",12],["Faible connectivité",10],["Coût des données",9],["Instabilité de l’électricité",7],["Difficultés de validation / coordination",7]]],
+["Collaboration avec la CCN",[["Pas encore engagée",14],["Satisfaisante mais à structurer",6],["Très limitée",3],["Fluide",1]]],
+["Relais des publications de la CCN",[["Rarement",15],["Jamais",5],["Souvent",2],["Systématiquement",2]]],
+["Déclaration des pages à la CCN",[["Aucune",11],["Je ne sais pas",11],["Certaines",1],["Toutes",1]]],
+["Calendrier éditorial",[["Oui",5],["Non",19]]],
+["Équipements disponibles",[["Smartphone",23],["Trépied",19],["Ordinateur",16],["Microphone",10],["Logiciel de montage",10],["Connexion Internet stable",5]]],
+["Intelligence artificielle",[["Utilisée",7],["En expérimentation",8],["Non utilisée",9]]]
+]};
+function chDiag(){const el=$("#chDiag");if(!el)return;
+ el.innerHTML=DIAG.blocs.map(([t,L])=>`<p class="eyebrow" style="margin:16px 0 4px">${esc(t)}</p>`+L.map(([l,v])=>stkRow(l,[[v,"--s2",l]],DIAG.n,`${v} / ${DIAG.n}`,`${l} : ${v} sur ${DIAG.n}`)).join("")).join("");
+}
 function renderHome(){
- chReco();chRes();
+ chReco();chRes();chDiag();
  $("#rl").textContent=`${ROLES[S.role]||S.role} · ${S.del.length} délégué(s) enregistré(s)`;
  const d=Math.ceil((EVENT-new Date())/864e5);
  $("#cd").textContent=d>1?`J-${d} · Samedi 28 et dimanche 29 novembre`:d===1?"Demain · Samedi 28 novembre":"Les États généraux sont en cours";
